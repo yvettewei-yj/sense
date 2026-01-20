@@ -1,0 +1,321 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": 1,
+      "name": "张阿姨",
+      "age": 55,
+      "occupation": "退休教师",
+      "background": "刚退休，有一笔积蓄想保值增值，对股票完全不懂，孩子建议她学习理财",
+      "investment_goal": "稳健保值，跑赢银行存款利率",
+      "risk_tolerance": "极低",
+      "pain_points": ["担心被骗", "不会用手机App", "对专业术语恐惧", "害怕亏钱"],
+      "trigger_scenario": "儿子推荐她下载了腾讯自选股",
+      "trust_threshold": 8,
+      "personality": "谨慎、爱问问题、需要反复确认安全性",
+      "default_scenario_id": "first_use",
+      "default_mental_state_id": "cautious"
+    },
+    {
+      "id": 2,
+      "name": "小王",
+      "age": 26,
+      "occupation": "互联网程序员",
+      "background": "工作3年攒了一些钱，看到同事炒股赚钱了也想试试，但怕亏",
+      "investment_goal": "想快速积累财富，对高收益有兴趣",
+      "risk_tolerance": "中等",
+      "pain_points": ["不知道从哪开始", "担心入场时机不对", "没时间盯盘", "对股票术语不熟"],
+      "trigger_scenario": "看到比特币暴涨的新闻，想了解什么是比特币和如何投资",
+      "trust_threshold": 6,
+      "personality": "好奇心强、学习能力强、但容易被FOMO情绪影响",
+      "default_scenario_id": "market_rally",
+      "default_mental_state_id": "fomo"
+    },
+    {
+      "id": 3,
+      "name": "李姐",
+      "age": 38,
+      "occupation": "全职妈妈",
+      "background": "以前在银行工作过，对理财有基础认知，现在全职带娃，想利用碎片时间投资",
+      "investment_goal": "为孩子教育基金做长期投资",
+      "risk_tolerance": "中低",
+      "pain_points": ["时间碎片化", "担心影响家庭开支", "需要老公同意", "想要简单易操作"],
+      "trigger_scenario": "朋友推荐说腾讯自选股可以定投基金",
+      "trust_threshold": 7,
+      "personality": "理性、有主见、但需要家人支持",
+      "default_scenario_id": "first_news_read",
+      "default_mental_state_id": "calm_observer"
+    },
+    {
+      "id": 4,
+      "name": "老刘",
+      "age": 48,
+      "occupation": "个体户老板",
+      "background": "做生意多年，手里有闲钱，以前炒过股亏过，对股市有阴影",
+      "investment_goal": "分散投资，不想把鸡蛋放一个篮子里",
+      "risk_tolerance": "中等",
+      "pain_points": ["曾经被套牢的心理阴影", "不相信推荐", "怕被割韭菜", "对券商有不信任感"],
+      "trigger_scenario": "听说现在的智能投顾不一样了，想再了解一下",
+      "trust_threshold": 9,
+      "personality": "多疑、爱抬杠、需要看到实际数据",
+      "default_scenario_id": "first_use",
+      "default_mental_state_id": "skeptical"
+    },
+    {
+      "id": 5,
+      "name": "小陈",
+      "age": 22,
+      "occupation": "大四学生",
+      "background": "即将毕业，有一点实习赚的钱想试试投资，看了很多财经博主的视频",
+      "investment_goal": "学习投资，积累经验，小额尝试",
+      "risk_tolerance": "较高（因为本金少）",
+      "pain_points": ["本金少", "怕被嘲笑不懂", "信息来源混乱", "容易被网红观点影响"],
+      "trigger_scenario": "刷到一个财经博主说现在是入场好时机",
+      "trust_threshold": 5,
+      "personality": "冲动、好学、但缺乏判断力",
+      "default_scenario_id": "market_rally",
+      "default_mental_state_id": "greedy"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "first_use",
+      "name": "第一次使用产品",
+      "summary": "首次打开App，界面信息量大，担心操作错误与资金安全。",
+      "context": "用户刚安装并首次打开腾讯自选股App，看到行情、资讯、基金等入口，有点不知所措。",
+      "market_state": "震荡/不确定",
+      "user_goal_in_this_moment": "先搞清楚这是什么App、安全吗、能帮我什么",
+      "constraints": [
+        "用户会问基础问题，并且非常在意安全与正规性",
+        "用户不接受过多专业术语，遇到术语会追问"
+      ],
+      "events": [
+        {
+          "id": "privacy_alarm",
+          "name": "隐私与信息收集警觉",
+          "description": "用户突然想起听说过“App会读取通讯录/相册”等传言，开始追问隐私与授权。",
+          "trigger": {
+            "turn_gte": 2
+          },
+          "impact": {
+            "add_context": "你会开始重点追问：App会不会读取通讯录/相册/定位？为什么要这些权限？不给权限能不能用？数据会不会外泄？"
+          }
+        },
+        {
+          "id": "id_card_concern",
+          "name": "证件与资金安全担忧",
+          "description": "当产品经理提到开户/绑卡/身份信息时，用户会明显紧张，担心被骗或信息泄露。",
+          "trigger": {
+            "keyword_any": ["开户", "身份证", "绑卡", "银行卡", "人脸", "实名"]
+          },
+          "impact": {
+            "add_context": "你会反复确认正规性、资金托管/监管、信息用途、风险提示，并要求对方解释清楚流程与安全措施。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "first_news_read",
+      "name": "第一次阅读资讯",
+      "summary": "第一次读投资资讯，信息密度高，担心被带节奏。",
+      "context": "用户点开资讯流，看到各种观点与KOL评论，不确定哪些可信，担心误导。",
+      "market_state": "震荡/热点频发",
+      "user_goal_in_this_moment": "我该怎么读、怎么判断、哪些内容对我有用",
+      "constraints": [
+        "用户会质疑资讯可靠性与利益相关",
+        "用户希望得到可执行的“阅读方法”而非结论"
+      ],
+      "events": [
+        {
+          "id": "kols_conflict",
+          "name": "KOL观点冲突",
+          "description": "用户刷到两个KOL对同一只股票给出完全相反的观点，困惑且焦躁。",
+          "trigger": {
+            "turn_gte": 2
+          },
+          "impact": {
+            "add_context": "你会追问：为什么观点差这么多？我该信谁？有没有一套自己判断的方法？"
+          }
+        }
+      ]
+    },
+    {
+      "id": "market_rally",
+      "name": "看到市场大涨",
+      "summary": "市场大涨，情绪上头，害怕错过，想立刻参与。",
+      "context": "用户看到涨幅榜与热搜，觉得不跟就亏，想马上买入但又怕追高。",
+      "market_state": "普涨/情绪高涨",
+      "user_goal_in_this_moment": "现在是不是该上车？怎么买？买什么？",
+      "constraints": [
+        "用户短期情绪明显，会反复确认“是不是晚了”",
+        "如果对方只劝冷静但不给方法，用户会失去耐心"
+      ],
+      "events": [
+        {
+          "id": "sudden_dip",
+          "name": "盘中急跌",
+          "description": "用户刚准备下单/刚买入，行情突然回撤，用户开始恐慌。",
+          "trigger": {
+            "turn_gte": 3
+          },
+          "impact": {
+            "add_context": "你会变得更焦虑：是不是要立刻卖？我是不是追高了？你刚刚说的还靠谱吗？"
+          }
+        }
+      ]
+    }
+  ],
+  "mental_states": [
+    {
+      "id": "fomo",
+      "name": "害怕错过",
+      "description": "焦虑、急于行动、不断确认时机，容易被涨跌牵动。",
+      "behavior_guidelines": [
+        "频繁追问“是不是来不及了”“现在买会不会错过”",
+        "对长篇解释耐心不足，需要清晰步骤和风险提醒"
+      ]
+    },
+    {
+      "id": "greedy",
+      "name": "渴望收益",
+      "description": "强烈关注收益，愿意冒险，但对风险理解不足。",
+      "behavior_guidelines": [
+        "优先问收益与回报，轻视风险",
+        "容易被“高手/内幕/策略”吸引，需要被引导建立正确预期"
+      ]
+    },
+    {
+      "id": "calm_observer",
+      "name": "冷静观望",
+      "description": "理性克制，重视证据与逻辑，希望慢慢了解。",
+      "behavior_guidelines": [
+        "会问方法论、流程与依据",
+        "对夸大承诺非常敏感"
+      ]
+    },
+    {
+      "id": "cautious",
+      "name": "谨慎怀疑",
+      "description": "高度谨慎，担心被骗，要求反复确认资质与安全。",
+      "behavior_guidelines": [
+        "会追问资质、监管、资金安全、隐私与信息收集",
+        "对“马上开户”很抵触，需要循序渐进"
+      ]
+    },
+    {
+      "id": "skeptical",
+      "name": "强怀疑/抬杠",
+      "description": "对推荐不信任，喜欢挑战观点，需要数据和可验证事实。",
+      "behavior_guidelines": [
+        "会质疑动机、提出反例、要求证据",
+        "如果回答空泛，会迅速降低信任并结束对话"
+      ]
+    }
+  ],
+  "goals": {
+    "end_conditions": {
+      "max_turns": 20,
+      "min_trust_to_continue": 0
+    },
+    "success_conditions": {
+      "requires_ready_to_open_account": true,
+      "min_concerns_addressed": 2,
+      "trust_at_least_profile_threshold": true
+    },
+    "success_conditions_by_difficulty": {
+      "easy": {
+        "requires_ready_to_open_account": false,
+        "min_concerns_addressed": 1,
+        "trust_at_least_profile_threshold": false,
+        "min_trust_level": 3
+      },
+      "medium": {
+        "requires_ready_to_open_account": false,
+        "min_concerns_addressed": 2,
+        "trust_at_least_profile_threshold": true
+      },
+      "hard": {
+        "requires_ready_to_open_account": true,
+        "min_concerns_addressed": 2,
+        "trust_at_least_profile_threshold": true
+      }
+    }
+  },
+  "evaluation_criteria": {
+    "communication_skills": {
+      "name": "沟通技巧",
+      "description": "是否能用通俗易懂的语言解释专业概念",
+      "weight": 0.25
+    },
+    "empathy": {
+      "name": "同理心",
+      "description": "是否能理解用户的担忧和需求",
+      "weight": 0.25
+    },
+    "problem_solving": {
+      "name": "问题解决",
+      "description": "是否能有效解答用户疑虑",
+      "weight": 0.2
+    },
+    "persuasion": {
+      "name": "说服力",
+      "description": "是否能逐步建立信任并引导开户",
+      "weight": 0.2
+    },
+    "professionalism": {
+      "name": "专业度",
+      "description": "对产品和投资知识的掌握程度",
+      "weight": 0.1
+    }
+  },
+  "scoring_rules": {
+    "base_score": 50,
+    "success_bonus": 20,
+    "trust_point_per_level": 2,
+    "concern_addressed_bonus": 5,
+    "fast_success_turns_threshold": 10,
+    "fast_success_bonus": 10,
+    "max_total_score": 100,
+    "bonuses": [
+      {
+        "id": "risk_disclosure",
+        "name": "风险提示/不保证收益",
+        "delta": 5,
+        "keyword_any": ["风险", "不保证收益", "可能亏损", "理性", "适当性"]
+      },
+      {
+        "id": "ask_user_goal",
+        "name": "先问清需求/目标",
+        "delta": 3,
+        "keyword_any": ["你的目标", "你更看重", "你的情况", "预算", "风险承受", "能接受亏"]
+      },
+      {
+        "id": "give_actionable_steps",
+        "name": "给出可执行步骤",
+        "delta": 3,
+        "keyword_any": ["第一步", "第二步", "步骤", "你可以先", "我建议你先"]
+      }
+    ],
+    "penalties": [
+      {
+        "id": "promise_profit",
+        "name": "承诺收益/暗示稳赚",
+        "delta": -10,
+        "keyword_any": ["稳赚", "保证赚钱", "包赚", "一定涨", "必赚", "百分百"]
+      },
+      {
+        "id": "pressure_open_account",
+        "name": "强催促开户",
+        "delta": -5,
+        "keyword_any": ["马上开户", "立刻开户", "现在就开", "赶紧开户"]
+      },
+      {
+        "id": "overuse_jargon",
+        "name": "堆砌专业术语（用户听不懂）",
+        "delta": -3,
+        "keyword_any": ["夏普", "波动率", "beta", "alpha", "回撤", "久期", "收益率曲线"]
+      }
+    ]
+  }
+}
+

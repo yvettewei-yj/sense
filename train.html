@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>训练中心 - PM用户Sense训练系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/train.css">
+</head>
+<body class="train-page">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="brand-text">PM用户Sense训练</span>
+            </a>
+            <a href="/" class="nav-btn nav-btn-outline">返回首页</a>
+        </div>
+    </nav>
+
+    <main class="train-main">
+        <!-- 选择用户阶段 -->
+        <section id="select-stage" class="stage active">
+            <div class="stage-container">
+                <div class="stage-header">
+                    <h1>选择一个用户，开始一局训练</h1>
+                    <p class="stage-subtitle">
+                        先预览用户档案，再开始对话训练（推荐从简单用户热身）
+                    </p>
+                    <div class="stage-actions">
+                        <button class="btn btn-primary btn-compact" id="quick-start-btn" type="button">
+                            🎲 一键随机开局
+                        </button>
+                        <span class="stage-actions-hint">随机用户 + 当前场景/心理状态</span>
+                    </div>
+                    <div class="training-options">
+                        <div class="option-item">
+                            <label for="scenario-select">场景</label>
+                            <select id="scenario-select">
+                                <option value="random">随机</option>
+                            </select>
+                        </div>
+                        <div class="option-item">
+                            <label for="mental-select">心理状态</label>
+                            <select id="mental-select">
+                                <option value="random">随机</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="profiles-list" id="profiles-list">
+                    <!-- 动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 对话阶段 -->
+        <section id="chat-stage" class="stage">
+            <div class="chat-layout">
+                <!-- 左侧用户信息面板 -->
+                <aside class="user-panel">
+                    <div class="panel-section user-profile-card">
+                        <div class="user-header">
+                            <div class="user-avatar" id="chat-user-avatar">👤</div>
+                            <div class="user-info">
+                                <h3 id="chat-user-name">用户名</h3>
+                                <span id="chat-user-meta">信息</span>
+                            </div>
+                        </div>
+                        <div class="user-background" id="chat-user-background"></div>
+                        <div class="user-tags">
+                            <span class="user-tag" id="chat-scenario">场景：-</span>
+                            <span class="user-tag" id="chat-mental">心理：-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section status-panel">
+                        <h4>对话状态</h4>
+                        <div class="status-item">
+                            <span class="status-label">对话轮数</span>
+                            <span class="status-value" id="turn-count">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">信任度</span>
+                            <div class="trust-bar">
+                                <div class="trust-progress" id="trust-progress"></div>
+                                <span class="trust-text" id="trust-text">1/10</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">已解答顾虑</span>
+                            <span class="status-value" id="concerns-count">0/0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section concerns-panel">
+                        <h4>用户主要顾虑</h4>
+                        <ul class="concerns-list" id="concerns-list">
+                            <!-- 动态加载 -->
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-danger btn-end" id="end-chat-btn">结束对话</button>
+                </aside>
+                
+                <!-- 右侧对话区域 -->
+                <div class="chat-area">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- 消息动态加载 -->
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="message-input" 
+                                placeholder="作为产品经理，输入你的回复..."
+                                rows="1"
+                            ></textarea>
+                            <button class="send-btn" id="send-btn">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="input-hint">按 Enter 发送，Shift + Enter 换行</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 评估阶段 -->
+        <section id="result-stage" class="stage">
+            <div class="result-container">
+                <div class="result-header">
+                    <div class="result-icon" id="result-icon">🎉</div>
+                    <h1 id="result-title">训练完成！</h1>
+                    <p id="result-subtitle">查看你的表现评估</p>
+                </div>
+                
+                <div class="result-score-card">
+                    <div class="score-main">
+                        <div class="score-value" id="total-score">0</div>
+                        <div class="score-label">综合评分</div>
+                    </div>
+                    <div class="score-grade" id="score-grade">B</div>
+                </div>
+
+                <div class="result-score-breakdown" id="score-breakdown" style="display:none;">
+                    <h3>得分拆解</h3>
+                    <ul id="score-breakdown-list"></ul>
+                </div>
+                
+                <div class="result-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-turns">0</span>
+                            <span class="stat-label">对话轮数</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💚</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-trust">0/10</span>
+                            <span class="stat-label">最终信任度</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-concerns">0/0</span>
+                            <span class="stat-label">解答顾虑</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" id="stat-result-icon">❓</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-result">-</span>
+                            <span class="stat-label">训练结果</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-dimensions">
+                    <div class="dimensions-header">
+                        <h3>各维度评分</h3>
+                        <span class="dimensions-hint">Radar 图 + 明细条形图</span>
+                    </div>
+                    <div class="radar-wrap">
+                        <canvas id="radar-canvas" aria-label="能力雷达图" role="img"></canvas>
+                        <div class="radar-empty" id="radar-empty" aria-hidden="true">
+                            维度评分不足，暂无法绘制 Radar 图
+                        </div>
+                    </div>
+                    <div class="dimensions-grid" id="dimensions-grid">
+                        <!-- 动态加载 -->
+                    </div>
+                </div>
+                
+                <div class="result-feedback">
+                    <div class="feedback-section highlights">
+                        <h3>💪 做得好的地方</h3>
+                        <ul id="highlights-list"></ul>
+                    </div>
+                    <div class="feedback-section improvements">
+                        <h3>📌 改进建议</h3>
+                        <ul id="improvements-list"></ul>
+                    </div>
+                </div>
+                
+                <div class="result-insight" id="result-insight">
+                    <h3>💡 用户Sense关键洞察</h3>
+                    <p id="insight-text"></p>
+                </div>
+                
+                <div class="result-comment" id="result-comment">
+                    <h3>📝 总体评价</h3>
+                    <p id="comment-text"></p>
+                </div>
+                
+                <div class="result-actions">
+                    <button class="btn btn-primary" id="retry-btn">再来一次</button>
+                    <a href="/train" class="btn btn-secondary">换个用户</a>
+                    <a href="/" class="btn btn-outline">返回首页</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 启动训练加载层（避免“点不进去”的错觉） -->
+    <div class="start-overlay" id="start-overlay" aria-hidden="true">
+        <div class="start-overlay-card" role="status" aria-live="polite">
+            <div class="start-spinner" aria-hidden="true"></div>
+            <div class="start-title">正在生成开场白…</div>
+            <div class="start-subtitle">
+                本地模型首次启动可能需要 10–30 秒（当前已等待 <span id="start-elapsed">0</span>s）
+            </div>
+            <div class="start-actions">
+                <button class="btn btn-outline btn-compact" id="start-cancel-btn" type="button">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用户档案预览 Drawer -->
+    <div class="drawer-overlay" id="profile-drawer-overlay" aria-hidden="true"></div>
+    <aside class="drawer" id="profile-drawer" role="dialog" aria-modal="true" aria-label="用户档案预览" aria-hidden="true">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <div class="drawer-avatar" id="drawer-avatar">👤</div>
+                <div class="drawer-title-text">
+                    <div class="drawer-name-row">
+                        <h2 id="drawer-name">用户</h2>
+                        <span class="drawer-badge" id="drawer-difficulty">-</span>
+                    </div>
+                    <div class="drawer-meta" id="drawer-meta">-</div>
+                </div>
+            </div>
+            <button class="drawer-close" id="drawer-close-btn" type="button" aria-label="关闭">✕</button>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-section">
+                <div class="drawer-section-title">触发场景</div>
+                <div class="drawer-section-content" id="drawer-trigger">-</div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">背景故事</div>
+                <div class="drawer-section-content" id="drawer-background">-</div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">投资目标</div>
+                <div class="drawer-section-content" id="drawer-goal">-</div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">风险承受能力</div>
+                <div class="drawer-section-content" id="drawer-risk">-</div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">主要顾虑</div>
+                <ul class="drawer-list" id="drawer-pains"></ul>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">性格特点</div>
+                <div class="drawer-section-content" id="drawer-personality">-</div>
+            </div>
+            <div class="drawer-section drawer-tip">
+                <div class="drawer-tip-title">本局设置</div>
+                <div class="drawer-tip-content">
+                    <span class="drawer-chip" id="drawer-sel-scenario">场景：随机</span>
+                    <span class="drawer-chip" id="drawer-sel-mental">心理：随机</span>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="btn btn-secondary btn-compact" id="drawer-cancel-btn" type="button">先看看别的</button>
+            <button class="btn btn-primary btn-compact" id="drawer-start-btn" type="button">开始训练</button>
+        </div>
+    </aside>
+
+    <script src="/static/js/train.js"></script>
+</body>
+</html>
